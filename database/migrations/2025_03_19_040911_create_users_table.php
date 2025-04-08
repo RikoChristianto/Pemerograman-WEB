@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('name')->max(255);
-            $table->string('email')->max(255);
-            $table->string('password')->max(8);
-            $table->string('no_hp')->max(50);
-            $table->string('role')->default('user')->max(50);
+            $table->string('name', 255);
+            $table->string('email', 255)->unique(); // biasanya email dibuat unik
+            $table->string('password'); // biarkan panjang default (255), cukup untuk bcrypt
+            $table->string('no_hp')->nullable(); // TANPA change()
+            $table->string('role', 50)->default('user');
         });
     }
 

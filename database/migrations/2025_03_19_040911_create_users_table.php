@@ -13,12 +13,32 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
+            $table->string('password');
+            $table->string('alamat')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('role')->default('pasien');
+            $table->rememberToken();
             $table->timestamps();
-            $table->string('name', 255);
-            $table->string('email', 255)->unique(); // biasanya email dibuat unik
-            $table->string('password'); // biarkan panjang default (255), cukup untuk bcrypt
-            $table->string('no_hp')->nullable(); // TANPA change()
-            $table->string('role', 50)->default('user');
+        });
+
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+
+
+        Schema::create('sessions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->string('ip_address', 45)->nullable();
+            $table->text('user_agent')->nullable();
+            $table->longText('payload');
+            $table->integer('last_activity')->index();
         });
     }
 
@@ -28,5 +48,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('sessions');
     }
 };

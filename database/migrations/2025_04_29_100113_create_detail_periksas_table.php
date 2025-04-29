@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('obats', function (Blueprint $table) {
+        Schema::create('detail_periksas', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nama_obat')->max(50);
-            $table->string('kemasan')->max(50);
-            $table->integer('harga')->nullable();
+            $table->foreignId('id_periksa')->constrained('periksas')->onDelete('cascade');
+            $table->foreignId('id_obat')->constrained('obats')->onDelete('cascade');
+            $table->decimal('biaya_periksa', 15, 2)->nullable();
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('obats');
+        Schema::dropIfExists('detail_periksas');
     }
 };

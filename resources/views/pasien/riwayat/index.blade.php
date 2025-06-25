@@ -7,42 +7,37 @@
     </div>
 @endif
 <section class="content-header">
-    <h1>Pasien <small>Riwayat Pemeriksaan</small></h1>
+    <h1>Pasien <small>Dashboard</small></h1>
 </section>
 
 <section class="content">
     <div class="card">
         <div class="card-header bg-primary text-white">
+            <h3 class="card-title">Ringkasan Pemeriksaan Terbaru</h3>
+        </div>
+        <div class="card-body">
+            @if($latestPeriksa)
+                <p><strong>ID Pemeriksaan:</strong> {{ $latestPeriksa->id }}</p>
+                <p><strong>Tanggal Periksa:</strong> {{ \Carbon\Carbon::parse($latestPeriksa->tgl_periksa)->format('d-m-Y') }}</p>
+                <p><strong>Catatan:</strong> {{ $latestPeriksa->catatan }}</p>
+                <p><strong>Diagnosa:</strong> {{ $latestPeriksa->diagnosa ?? 'Belum ada diagnosa' }}</p>
+                <p><strong>Biaya Periksa:</strong> Rp {{ number_format($latestPeriksa->biaya_periksa, 0, ',', '.') }}</p>
+                <p><strong>Poli:</strong> {{ $latestPeriksa->poli->nama_poli ?? '-' }}</p>
+            @else
+                <p>Belum ada pemeriksaan yang tercatat.</p>
+            @endif
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header bg-secondary text-white">
             <h3 class="card-title">Riwayat Pemeriksaan</h3>
         </div>
         <div class="card-body">
-            @if($periksas->isEmpty())
-                <p>Tidak ada riwayat pemeriksaan.</p>
+            @if($periksas->count() > 0)
+                <a href="{{ route('pasien.riwayat.index') }}" class="btn btn-info">Lihat Riwayat Pemeriksaan</a>
             @else
-                <table class="table table-bordered table-striped">
-                    <thead class="bg-secondary text-white">
-                        <tr>
-                            <th width="5%">NO</th>
-                            <th>ID Periksa</th>
-                            <th>Tanggal Periksa</th>
-                            <th>Catatan</th>
-                            <th>Diagnosa</th>
-                            <th>Biaya Periksa</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($periksas as $index => $periksa)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $periksa->id }}</td>
-                            <td>{{ \Carbon\Carbon::parse($periksa->tgl_periksa)->format('d-m-Y') }}</td>
-                            <td>{{ $periksa->catatan }}</td>
-                            <td>{{ $periksa->diagnosa ?? 'Belum ada diagnosa' }}</td>
-                            <td>Rp {{ number_format($periksa->biaya_periksa, 0, ',', '.') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                <p>Tidak ada riwayat pemeriksaan.</p>
             @endif
         </div>
     </div>
